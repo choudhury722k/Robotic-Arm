@@ -1,4 +1,5 @@
 import cv2
+import math
 import mediapipe as mp
   
 #Build Keypoints using MP Holistic
@@ -20,8 +21,8 @@ def draw_styled_landmarks(image, results):
                               mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=4), 
                               mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2)) 
     
-def claw_open_close(coord1, coord2):
-    print("Work on this")
+def claw(coord1, coord2):
+    return math.sqrt(math.pow(coord1.x - coord2.x, 2) + math.pow(coord1.y - coord2.y, 2) * 1.0)
 
 def calculate_movement(coordinate):
     print("Work on this")
@@ -38,7 +39,8 @@ if __name__ == "__main__":
                 print(results.right_hand_landmarks.landmark[4])
                 print("INDEX_FINGER_TIP")
                 print(results.right_hand_landmarks.landmark[8])
-                claw_open_close(results.right_hand_landmarks.landmark[4], results.right_hand_landmarks.landmark[8])
+                distance = claw(results.right_hand_landmarks.landmark[4], results.right_hand_landmarks.landmark[8])
+                print("distance = %.6f"%distance)
                 print("WRIST")
                 print(results.right_hand_landmarks.landmark[0])
                 calculate_movement(results.right_hand_landmarks.landmark[0])
