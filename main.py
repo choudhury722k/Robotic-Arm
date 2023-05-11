@@ -35,10 +35,10 @@ if __name__ == "__main__":
             image, results = mediapipe_detection(frame, holistic)
 
             if results.right_hand_landmarks != None:
-                print("THUMB_TIP")
-                print(results.right_hand_landmarks.landmark[4])
-                print("INDEX_FINGER_TIP")
-                print(results.right_hand_landmarks.landmark[8])
+#                 print("THUMB_TIP")
+#                 print(results.right_hand_landmarks.landmark[4])
+#                 print("INDEX_FINGER_TIP")
+#                 print(results.right_hand_landmarks.landmark[8])
                 distance = claw(results.right_hand_landmarks.landmark[4], results.right_hand_landmarks.landmark[8])
                 print("distance = %.6f"%distance)
                 print("WRIST")
