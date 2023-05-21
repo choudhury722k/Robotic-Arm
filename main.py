@@ -21,12 +21,6 @@ def draw_styled_landmarks(image, results):
                               mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=4), 
                               mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2)) 
     
-def claw(coord1, coord2):
-    return math.sqrt(math.pow(coord1.x - coord2.x, 2) + math.pow(coord1.y - coord2.y, 2) * 1.0)
-
-def calculate_movement(coordinate):
-    print("Work on this")
-
 if __name__ == "__main__":
     cap = cv2.VideoCapture(0)
     with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
@@ -35,15 +29,23 @@ if __name__ == "__main__":
             image, results = mediapipe_detection(frame, holistic)
 
             if results.right_hand_landmarks != None:
-#                 print("THUMB_TIP")
-#                 print(results.right_hand_landmarks.landmark[4])
-#                 print("INDEX_FINGER_TIP")
-#                 print(results.right_hand_landmarks.landmark[8])
-                distance = claw(results.right_hand_landmarks.landmark[4], results.right_hand_landmarks.landmark[8])
-                print("distance = %.6f"%distance)
-                print("WRIST")
-                print(results.right_hand_landmarks.landmark[0])
-                calculate_movement(results.right_hand_landmarks.landmark[0])
+                coord1 = results.right_hand_landmarks.landmark[4]
+                coord2 = results.right_hand_landmarks.landmark[8]
+                distance = math.sqrt(math.pow(coord1.x - coord2.x, 2) + math.pow(coord1.y - coord2.y, 2) * 1.0)
+                if distance > 0.1:
+                    cv2.putText(image,
+                                "Distance = %.2f (Open)" % distance, 
+                                (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_4)
+                else:
+                    cv2.putText(image, 
+                                "Distance = %.2f (Close)" % distance, 
+                                (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_4)
+                cv2.putText(image, 
+                            "Wrist_x = %.2f" % results.right_hand_landmarks.landmark[0].x, 
+                            (50, 75), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_4)
+                cv2.putText(image, 
+                            "Wrist_y = %.2f" % results.right_hand_landmarks.landmark[0].y, 
+                            (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_4)
                     
             draw_styled_landmarks(image, results)
     
